@@ -1,4 +1,4 @@
-#include <Adafruit_Si7021.h>
+//#include <Adafruit_Si7021.h> //Can't find file
 
 #define NOTE_B0  31
 #define NOTE_C1  33
@@ -90,6 +90,8 @@
 #define NOTE_D8  4699
 #define NOTE_DS8 4978
 #define FORCE_SENSOR_PIN A0 // the FSR and 10K pulldown are connected to A0
+#define HEART_RATE_PIN A2
+#define POTENTIOMETER_PIN A5
 
 // constants won't change. They're used here to set pin numbers:
 const int BUTTON_PIN = 3; // the number of the pushbutton pin
@@ -178,6 +180,14 @@ void loop()
 
 }
  int analogReading = analogRead(FORCE_SENSOR_PIN);
+ int heartReading = analogRead(HEART_RATE_PIN);
+ int potentiometerReading = analogRead(POTENTIOMETER_PIN);
+
+  Serial.print("Heart Rate Reading = ");
+  Serial.println(heartReading);
+
+  Serial.print("Potentiometer Reading = ");
+  Serial.println(potentiometerReading);
 
   Serial.print("Force sensor reading = ");
  // Serial.print(analogReading); // print the raw analog reading
