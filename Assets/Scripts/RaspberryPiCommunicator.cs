@@ -8,7 +8,18 @@ using NativeWebSocket;
 public class RaspberryPiCommunicator : MonoBehaviour
 {
 	public string raspberryPiIP = "192.168.10.244";
-    private int webSocketPort = 32323;
+	private int webSocketPort = 32323;
+    
+	private int potentiometerValue;
+	private int hearRateValue;
+	private int forceValue;
+
+
+	public GameObject cube;
+	public GameObject potentionCube;
+	public Material mat1;
+	public Material mat2;
+	public Material mat3;
 
     private WebSocket webSocket;
 
@@ -40,8 +51,54 @@ public class RaspberryPiCommunicator : MonoBehaviour
     }
 
     private void WebSocket_OnMessage(byte[] data)
-    {
-        Debug.Log(System.Text.Encoding.UTF8.GetString(data));
+	{
+		string socketMessage = System.Text.Encoding.UTF8.GetString(data);
+	    //Debug.Log(System.Text.Encoding.UTF8.GetString(data));
+        
+	    if(socketMessage.Contains("Potentiometer"))
+	    {
+		    string[] value = socketMessage.Split("=");
+		    potentiometerValue = int.Parse(value[1]);
+		    if(potentiometerValue >= 0 && potentiometerValue <= 350)
+		    {
+		    	potentionCube.GetComponent<Renderer>().material = mat1;
+		    }
+		    else if (potentiometerValue > 350 && potentiometerValue <= 750)
+		    {
+		    	potentionCube.GetComponent<Renderer>().material = mat2;
+		    }
+		    else if (potentiometerValue > 751)
+		    {
+		    	potentionCube.GetComponent<Renderer>().material = mat3;
+		    }
+
+		    
+	    }
+		
+		if(socketMessage.Contains("Heart"))
+		{
+			string[] value = socketMessage.Split("=");
+			hearRateValue = int.Parse(value[1]);
+		    
+		}
+		
+		if(socketMessage.Contains("Force"))
+		{
+			string[] value = socketMessage.Split("=");
+			forceValue = int.Parse(value[1]);
+			if(forceValue > 900) 
+			{
+			
+				Instantiate(cube);
+			}
+		    
+		}
+		
+		
+		Debug.Log("Potentiometer Value = " + potentiometerValue);
+		//Debug.Log("Heart Rate Value = " + hearRateValue);
+		Debug.Log("Force Value Value = " + forceValue);
+        
     }
 
     // Start is called before the first frame update
