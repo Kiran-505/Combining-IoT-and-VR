@@ -98,12 +98,14 @@ const int BUTTON_PIN = 3; // the number of the pushbutton pin
 const int LED_PIN =  10;   // the number of the LED pin
 const int BUZZER_PIN = 6; // Arduino pin connected to Buzzer's pin
 
+
 // Variables will change:
 int lastState = HIGH; // the previous state from the input pin
 int currentState;    // the current reading from the input pin
 
 // variables will change:
 int buttonState = 0;   // variable for reading the pushbutton status
+bool sentButtonSocket = false;
 
 // notes in the melody:
 int melody[] = {
@@ -167,16 +169,24 @@ void loop()
   if(buttonState == LOW) 
   {        // If button is pressing
     digitalWrite(LED_PIN, HIGH); // turn on LED
-    //Serial.println("The button is being pressed");
     digitalWrite(BUZZER_PIN, HIGH); // turn on
-    buzzer();
+
+      if(sentButtonSocket == false){
+      Serial.println("Button was pressed");
+      sentButtonSocket = true;
+      }
+    
+
+    //buzzer();
  
   }
   else 
   {                          // otherwise, button is not pressing
     digitalWrite(LED_PIN, LOW);  // turn off LED
-   // Serial.println("The button is unpressed");
     digitalWrite(BUZZER_PIN, LOW);  // turn off
+    if(sentButtonSocket == true){
+      sentButtonSocket = false;
+      }
 
 }
  int analogReading = analogRead(FORCE_SENSOR_PIN);
@@ -204,7 +214,7 @@ void loop()
   //   Serial.println(" -> big squeeze");
     Serial.println(analogReading);
     Serial.println("----------------------");
-  delay(1000);
+  delay(200);
 
 }
 void buzzer() 

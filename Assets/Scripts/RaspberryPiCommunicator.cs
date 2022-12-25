@@ -94,6 +94,13 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		    
 		}
 		
+		if(socketMessage.Contains("Button"))
+		{
+			Debug.Log(socketMessage);
+			Instantiate(cube);
+			
+		}
+		
 		
 		Debug.Log("Potentiometer Value = " + potentiometerValue);
 		//Debug.Log("Heart Rate Value = " + hearRateValue);
