@@ -13,3 +13,8 @@
 
 - Install this library: https://github.com/endel/NativeWebSocket
 - Change the IP in the script
+- Install Oculus ADB Driver
+- Run ADB 'adb install -r <build_path>' to install apk on Quest 2 
+
+
+(Quest Documentation: https://developer.oculus.com/documentation/unity/unity-enable-device/)
