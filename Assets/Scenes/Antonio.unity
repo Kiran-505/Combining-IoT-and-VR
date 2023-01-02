@@ -781,7 +781,7 @@ PrefabInstance:
     - target: {fileID: 4766558086280018174, guid: b41026ea2ddb4cd48b8f522ef8ac6585,
         type: 3}
       propertyPath: raspberryPiIP
-      value: 192.168.1.101
+      value: 192.168.10.244
       objectReference: {fileID: 0}
     - target: {fileID: 4766558086280018175, guid: b41026ea2ddb4cd48b8f522ef8ac6585,
         type: 3}
