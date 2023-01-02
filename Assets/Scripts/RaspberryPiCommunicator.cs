@@ -116,7 +116,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		
 		Debug.Log("Potentiometer Value = " + potentiometerValue);
 		//Debug.Log("Heart Rate Value = " + hearRateValue);
-		Debug.Log("Force Value Value = " + forceValue);
+		Debug.Log("Force Value = " + forceValue);
         
 	}
 
