@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class lightSwitch : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject pointLight;
+    public bool isOn;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    private void OnTriggerEnter(Collider other){
+        if (isOn){
+        pointLight.SetActive(false);
+        isOn = false;
+        }
+        else {
+        pointLight.SetActive(true);
+        isOn = true;
+        }
     }
 }

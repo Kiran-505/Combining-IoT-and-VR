@@ -15,8 +15,8 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	private int hearRateValue;
 	private int forceValue;
 	
-	private bool lightON = false;
-
+	//private bool lightON = false;
+	public lightSwitch lightSwitch;
 
 
     public GameObject cube;
@@ -132,7 +132,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	void Update()
 	{
 		webSocket.DispatchMessageQueue();
-        if (Input.GetKeyDown(KeyCode.Space))
+        /*if (Input.GetKeyDown(KeyCode.Space))
 		{
             if (!lightON)
             {
@@ -144,7 +144,17 @@ public class RaspberryPiCommunicator : MonoBehaviour
                 SendWebSocketMessage("tdtool --off " + tellStickID);
                 lightON = false;
             }
-        }
+        }*/
+		if (!lightSwitch.isOn)
+		{
+			SendWebSocketMessage("tdtool --on " + tellStickID);
+        	lightSwitch.isOn = true;
+		}
+		else 
+		{
+			SendWebSocketMessage("tdtool --off " + tellStickID);
+            lightSwitch.isOn = false;
+		}
 
     }
 	
