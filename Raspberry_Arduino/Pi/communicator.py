@@ -1,21 +1,24 @@
-#import websockets
 import threading
 from websocket_server import WebsocketServer
 import json
 import serial
+import os
 
 def on_message(client, server, message):
     print("Client(%d) said: %s" % (client['id'], message))
+    if("tdtool" in message):
+        print("This was the button")
+        os.system(message)
 
 def new_client(client, server):
     print("New client connected with id %d" % client['id'])
 
 def listen_to_arduino(server):
-    arduino = serial.Serial('/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_95730333937351201141-if00', 9600, timeout=.1)
+    arduino = serial.Serial('/dev/serial/by-id/usb-Arduino__www.arduino.cc__Arduino_Uno_649323437383519170D0-if00', 9600, timeout=.1)
     while True:
         data = arduino.readline()
         if data:
-            print(data)
+            #print(data)
             server.send_message_to_all(data)
 
 def create_websocket():
@@ -31,3 +34,4 @@ def main():
     create_websocket()
 
 main()
+
