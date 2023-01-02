@@ -18,7 +18,8 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	private bool lightON = false;
 
 
-	public GameObject cube;
+
+    public GameObject cube;
 	public GameObject potentionCube;
 	public Material mat1;
 	public Material mat2;
@@ -131,7 +132,21 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	void Update()
 	{
 		webSocket.DispatchMessageQueue();
-	}
+        if (Input.GetKeyDown(KeyCode.Space))
+		{
+            if (!lightON)
+            {
+                SendWebSocketMessage("tdtool --on " + tellStickID);
+                lightON = true;
+            }
+            else
+            {
+                SendWebSocketMessage("tdtool --off " + tellStickID);
+                lightON = false;
+            }
+        }
+
+    }
 	
 	
 	async void SendWebSocketMessage(string text)
