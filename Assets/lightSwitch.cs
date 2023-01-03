@@ -5,18 +5,43 @@ using UnityEngine;
 public class lightSwitch : MonoBehaviour
 {
     public GameObject pointLight;
-    public bool isOn;
+    public GameObject buttonObject;
+    public GameObject lampShade;
+
+    public string tellID;
+    public RaspberryPiCommunicator communicator;
+
+
 
     private void OnTriggerEnter(Collider other){
-        if (isOn){
-            Debug.Log("REEEEEEEEEEEEEE");
-            pointLight.GetComponent<Light>().intensity = 0f;
-        }
-        else {
-            Debug.Log("AHHHHHHHHHHHHHHH");
-            pointLight.GetComponent<Light>().intensity = 1.2f;
 
-        }
+        Debug.Log("Lightswitch collided");
+        turnOnLight();
+
+
+        
     }
+
+
+    public void turnOnLight()
+    {
+
+        if (communicator.lightON) // false
+        {
+            pointLight.SetActive(false);
+            communicator.sendTellStickSocket(tellID);
+            lampShade.GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
+            buttonObject.transform.eulerAngles = new Vector3(buttonObject.transform.eulerAngles.x, buttonObject.transform.eulerAngles.y, 12);
+        }
+        else
+        {
+            pointLight.SetActive(true); //here 
+            communicator.sendTellStickSocket(tellID);
+            lampShade.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
+            buttonObject.transform.eulerAngles = new Vector3(buttonObject.transform.eulerAngles.x, buttonObject.transform.eulerAngles.y, -8);
+        }
+
+    }
+
 
 }

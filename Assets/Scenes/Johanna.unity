@@ -852,7 +852,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 32821347}
-  m_LocalRotation: {x: -0, y: -0, z: 0.10477261, w: 0.9944962}
+  m_LocalRotation: {x: 0, y: 0, z: 0.10477147, w: 0.9944964}
   m_LocalPosition: {x: 0.015, y: -0.006, z: -0.002}
   m_LocalScale: {x: 0.04678597, y: 0.12168426, z: 0.036318414}
   m_ConstrainProportionsScale: 0
@@ -9537,6 +9537,11 @@ PrefabInstance:
       propertyPath: lightSwitch
       value: 
       objectReference: {fileID: 1386005394}
+    - target: {fileID: 4766558086280018174, guid: b41026ea2ddb4cd48b8f522ef8ac6585,
+        type: 3}
+      propertyPath: raspberryPiIP
+      value: 192.168.10.197
+      objectReference: {fileID: 0}
     - target: {fileID: 4766558086280018175, guid: b41026ea2ddb4cd48b8f522ef8ac6585,
         type: 3}
       propertyPath: m_Name

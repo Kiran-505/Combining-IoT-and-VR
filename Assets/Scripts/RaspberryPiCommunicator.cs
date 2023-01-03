@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using NativeWebSocket;
-
+using System.Runtime.CompilerServices;
 
 public class RaspberryPiCommunicator : MonoBehaviour
 {
@@ -15,8 +15,8 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	private int hearRateValue;
 	private int forceValue;
 	
-	private bool lightON = false;
-	public lightSwitch lightSwitch;
+	public bool lightON = false;
+	private bool hiddenUI = true;
 
 
     public GameObject cube;
@@ -26,6 +26,51 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	public Material mat3;
 
 	private WebSocket webSocket;
+
+	public GameObject handUI;
+
+
+
+	public void sendTellStickSocket(string tellID)
+	{
+        if (lightON == false)
+        {
+            SendWebSocketMessage("tdtool --on " + tellID);
+            lightON = true;
+        }
+        else
+        {
+            SendWebSocketMessage("tdtool --off " + tellID);
+            lightON = false;
+        }
+
+    }
+
+	public void openHandUI(string socketMessage)
+	{
+        string[] value = socketMessage.Split("=");
+        forceValue = int.Parse(value[1]);
+		if (forceValue > 700)
+		{
+
+			Instantiate(cube);
+			Debug.Log("STATUS IS: " + handUI.activeSelf);
+
+			if (!hiddenUI)
+			{
+				handUI.SetActive(true);
+			}
+			else
+			{
+				handUI.SetActive(false);
+			}
+
+		}
+		else
+		{
+			hiddenUI = !hiddenUI;
+		}
+    }
 
 	private void initWebSocket()
 	{
@@ -88,13 +133,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		
 		if(socketMessage.Contains("Force"))
 		{
-			string[] value = socketMessage.Split("=");
-			forceValue = int.Parse(value[1]);
-			if(forceValue > 900) 
-			{
-			
-				Instantiate(cube);
-			}
+			openHandUI(socketMessage);
 		    
 		}
 		
@@ -102,15 +141,8 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		{
 			Debug.Log(socketMessage);
 			Instantiate(cube);
-			if(lightON == false){
-				SendWebSocketMessage("tdtool --on " + tellStickID);
-				lightON = true;
-			}
-			else
-			{
-				SendWebSocketMessage("tdtool --off " + tellStickID);
-				lightON = false;	
-			}
+			//sendTellStickSocket(tellStickID);
+
 			
 		}
 		
@@ -132,29 +164,6 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	void Update()
 	{
 		webSocket.DispatchMessageQueue();
-        /*if (Input.GetKeyDown(KeyCode.Space))
-		{
-            if (!lightON)
-            {
-                SendWebSocketMessage("tdtool --on " + tellStickID);
-                lightON = true;
-            }
-            else
-            {
-                SendWebSocketMessage("tdtool --off " + tellStickID);
-                lightON = false;
-            }
-        }*/
-		if (!lightSwitch.isOn)
-		{
-			SendWebSocketMessage("tdtool --on " + tellStickID);
-        	//lightSwitch.isOn = true;
-		}
-		else 
-		{
-			SendWebSocketMessage("tdtool --off " + tellStickID);
-            //lightSwitch.isOn = false;
-		}
 
     }
 	
@@ -163,10 +172,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	{
 		if (webSocket.State == WebSocketState.Open)
 		{
-			// Sending bytes
-			//await webSocket.Send(new byte[] { 10, 20, 30 });
-
-			// Sending plain text
+			// Sending plain text socket
 			await webSocket.SendText(text);
 		}
 	}
