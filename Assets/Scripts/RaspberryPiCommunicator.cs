@@ -19,7 +19,9 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	private bool hiddenUI = true;
 
 
-    public GameObject cube;
+    public GameObject[] presents;
+
+
 	public GameObject potentionCube;
 	public Material mat1;
 	public Material mat2;
@@ -30,8 +32,30 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	public GameObject handUI;
 
 
+	public float minX, maxX, minZ, maxZ, minY;
 
-	public void sendTellStickSocket(string tellID)
+    private Vector3 GenerateSpawnPosition() //Generates random position Vector3
+    {
+        float spawnPosX = Random.Range(minX, maxX);
+        float spawnPosZ = Random.Range(minZ, maxZ);
+
+
+
+        //float terrainHeight = MyTerrainData.GetHeight((int)spawnPosX, (int)spawnPosZ);
+
+        Vector3 randomPos = new Vector3(spawnPosX, minY, spawnPosZ);
+
+		spawnPresent(randomPos);
+        return randomPos;
+    }
+
+    public void spawnPresent(Vector3 position)
+    {
+		Instantiate(presents[Random.Range(0, presents.Length)], position, Quaternion.identity);
+    }
+
+
+    public void sendTellStickSocket(string tellID)
 	{
         if (lightON == false)
         {
@@ -52,8 +76,6 @@ public class RaspberryPiCommunicator : MonoBehaviour
         forceValue = int.Parse(value[1]);
 		if (forceValue > 700)
 		{
-
-			Instantiate(cube);
 			Debug.Log("STATUS IS: " + handUI.activeSelf);
 
 			if (!hiddenUI)
@@ -72,7 +94,8 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		}
     }
 
-	private void initWebSocket()
+
+    private void initWebSocket()
 	{
 		webSocket = new WebSocket($"ws://{raspberryPiIP}:{webSocketPort}");
 		webSocket.Connect();
@@ -124,12 +147,12 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		    
 		}
 		
-		if(socketMessage.Contains("Heart"))
+		/*if(socketMessage.Contains("Heart"))
 		{
 			string[] value = socketMessage.Split("=");
 			hearRateValue = int.Parse(value[1]);
 		    
-		}
+		}*/
 		
 		if(socketMessage.Contains("Force"))
 		{
@@ -140,16 +163,17 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		if(socketMessage.Contains("Button"))
 		{
 			Debug.Log(socketMessage);
-			Instantiate(cube);
+			GenerateSpawnPosition();
+			//spawnPresent();
 			//sendTellStickSocket(tellStickID);
 
 			
 		}
 		
 		
-		Debug.Log("Potentiometer Value = " + potentiometerValue);
+		//Debug.Log("Potentiometer Value = " + potentiometerValue);
 		//Debug.Log("Heart Rate Value = " + hearRateValue);
-		Debug.Log("Force Value = " + forceValue);
+		//Debug.Log("Force Value = " + forceValue);
         
 	}
 

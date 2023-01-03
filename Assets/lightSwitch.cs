@@ -22,7 +22,6 @@ public class lightSwitch : MonoBehaviour
         
     }
 
-
     public void turnOnLight()
     {
 
