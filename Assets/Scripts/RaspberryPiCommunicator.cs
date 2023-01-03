@@ -15,7 +15,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	private int hearRateValue;
 	private int forceValue;
 	
-	//private bool lightON = false;
+	private bool lightON = false;
 	public lightSwitch lightSwitch;
 
 
@@ -148,12 +148,12 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		if (!lightSwitch.isOn)
 		{
 			SendWebSocketMessage("tdtool --on " + tellStickID);
-        	lightSwitch.isOn = true;
+        	//lightSwitch.isOn = true;
 		}
 		else 
 		{
 			SendWebSocketMessage("tdtool --off " + tellStickID);
-            lightSwitch.isOn = false;
+            //lightSwitch.isOn = false;
 		}
 
     }

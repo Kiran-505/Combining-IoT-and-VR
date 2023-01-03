@@ -9,12 +9,14 @@ public class lightSwitch : MonoBehaviour
 
     private void OnTriggerEnter(Collider other){
         if (isOn){
-        pointLight.SetActive(false);
-        isOn = false;
+            Debug.Log("REEEEEEEEEEEEEE");
+            pointLight.GetComponent<Light>().intensity = 0f;
         }
         else {
-        pointLight.SetActive(true);
-        isOn = true;
+            Debug.Log("AHHHHHHHHHHHHHHH");
+            pointLight.GetComponent<Light>().intensity = 1.2f;
+
         }
     }
+
 }
