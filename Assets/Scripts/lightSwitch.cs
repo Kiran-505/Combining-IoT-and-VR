@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -30,14 +30,14 @@ public class lightSwitch : MonoBehaviour
             pointLight.SetActive(false);
             communicator.sendTellStickSocket(tellID);
             lampShade.GetComponent<Renderer>().material.DisableKeyword("_EMISSION");
-            buttonObject.transform.eulerAngles = new Vector3(buttonObject.transform.eulerAngles.x, buttonObject.transform.eulerAngles.y, 12);
+	        buttonObject.transform.eulerAngles = new Vector3(0, 0, 12);
         }
         else
         {
             pointLight.SetActive(true); //here 
             communicator.sendTellStickSocket(tellID);
             lampShade.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
-            buttonObject.transform.eulerAngles = new Vector3(buttonObject.transform.eulerAngles.x, buttonObject.transform.eulerAngles.y, -8);
+	        buttonObject.transform.eulerAngles = new Vector3(180, 0, 12);
         }
 
     }
