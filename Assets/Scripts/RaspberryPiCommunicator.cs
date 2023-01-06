@@ -7,25 +7,43 @@ using System.Runtime.CompilerServices;
 
 public class RaspberryPiCommunicator : MonoBehaviour
 {
+	public bool showDebug; //Turn this on to show Sensor values
 	public string raspberryPiIP;
 	public string tellStickID;
 	private int webSocketPort = 32323;
     
 	private int potentiometerValue;
+	private int oldPotentiometerValue = 0;
 	private int hearRateValue;
 	private int forceValue;
 	
+	[HideInInspector]
 	public bool lightON = false;
 	private bool hiddenUI = true;
+	
+	public float lightIntensityMultiplier = 1f;
+	
+	private List<float> baseLightsIntensity = new List<float>();
+	private List<float> midLightsIntensity = new List<float>();
+	private List<float> topLightsIntensity = new List<float>();
+	private List<float> starLightsIntensity = new List<float>();
+	
+	private Component[] baseLightsArray;
+	private Component[] midLightsArray;
+	private Component[] topLightsArray;
+	private Component[] starLightsArray;
+
+
+
 
 
     public GameObject[] presents;
 
 
-	public GameObject potentionCube;
-	public Material mat1;
-	public Material mat2;
-	public Material mat3;
+	public GameObject treeLightsBase;
+	public GameObject treeLightsMid;
+	public GameObject treeLightsTop;
+	public GameObject treeLightsStar;
 
 	private WebSocket webSocket;
 
@@ -88,7 +106,68 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		{
 			hiddenUI = !hiddenUI;
 		}
-    }
+	}
+	
+	
+	private void getXmasLightsValues() //Saves all the Xmas Tree Lights Values in Lists as a reference to when they are changed by the potentiometer values
+	{
+		baseLightsArray = treeLightsBase.GetComponentsInChildren<Light>();
+		midLightsArray = treeLightsMid.GetComponentsInChildren<Light>();
+		topLightsArray = treeLightsTop.GetComponentsInChildren<Light>();
+		starLightsArray = treeLightsStar.GetComponentsInChildren<Light>();
+
+		for(int i = 0; i < baseLightsArray.Length; i++)
+		{
+			baseLightsIntensity.Add(baseLightsArray[i].GetComponent<Light>().intensity);
+		}
+		
+		for(int i = 0; i < midLightsArray.Length; i++)
+		{
+			midLightsIntensity.Add(midLightsArray[i].GetComponent<Light>().intensity);
+		}
+		
+		for(int i = 0; i < topLightsArray.Length; i++)
+		{
+			topLightsIntensity.Add(topLightsArray[i].GetComponent<Light>().intensity);
+		}
+		
+		for(int i = 0; i < starLightsArray.Length; i++)
+		{
+			starLightsIntensity.Add(starLightsArray[i].GetComponent<Light>().intensity);
+		}
+	}
+	
+    
+	private void changeXmasLights(string socketMessage) //Changes the Christmas Tree lights depending on Potentiometer Socket Value
+	{
+		
+		float percentage = potentiometerValue/1023f;
+
+		for(int i = 0; i < baseLightsIntensity.Count; i++)
+		{
+			float newIntensity = baseLightsIntensity[i] * percentage;
+			baseLightsArray[i].GetComponent<Light>().intensity = newIntensity * lightIntensityMultiplier;
+		}
+		
+		for(int i = 0; i < midLightsIntensity.Count; i++)
+		{
+			float newIntensity = midLightsIntensity[i] * percentage;
+			midLightsArray[i].GetComponent<Light>().intensity = newIntensity * lightIntensityMultiplier;
+		}
+		
+		for(int i = 0; i < topLightsIntensity.Count; i++)
+		{
+			float newIntensity = topLightsIntensity[i] * percentage;
+			topLightsArray[i].GetComponent<Light>().intensity = newIntensity * lightIntensityMultiplier;
+		}
+		
+		for(int i = 0; i < starLightsIntensity.Count; i++)
+		{
+			float newIntensity = starLightsIntensity[i] * percentage;
+			starLightsArray[i].GetComponent<Light>().intensity = newIntensity * lightIntensityMultiplier;
+		}
+		
+	}
 
 
 	private void initWebSocket() //Starts WebSocket Client Connection
@@ -125,30 +204,17 @@ public class RaspberryPiCommunicator : MonoBehaviour
         
 		if(socketMessage.Contains("Potentiometer"))
 		{
+			
 			string[] value = socketMessage.Split("=");
 			potentiometerValue = int.Parse(value[1]);
-			if(potentiometerValue >= 0 && potentiometerValue <= 350)
-			{
-				potentionCube.GetComponent<Renderer>().material = mat1;
+			
+			if(oldPotentiometerValue != potentiometerValue){
+				changeXmasLights(socketMessage);
+				oldPotentiometerValue = potentiometerValue;
 			}
-			else if (potentiometerValue > 350 && potentiometerValue <= 750)
-			{
-				potentionCube.GetComponent<Renderer>().material = mat2;
-			}
-			else if (potentiometerValue > 751)
-			{
-				potentionCube.GetComponent<Renderer>().material = mat3;
-			}
-
 		    
 		}
 		
-		/*if(socketMessage.Contains("Heart"))
-		{
-			string[] value = socketMessage.Split("=");
-			hearRateValue = int.Parse(value[1]);
-		    
-		}*/
 		
 		if(socketMessage.Contains("Force"))
 		{
@@ -160,16 +226,21 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		{
 			Debug.Log(socketMessage);
 			GenerateSpawnPosition();
-			//spawnPresent();
-			//sendTellStickSocket(tellStickID);
 
 			
 		}
 		
+		if(showDebug)
+		{
+			
+			Debug.Log("Potentiometer Value = " + potentiometerValue);
+			Debug.Log("Heart Rate Value = " + hearRateValue);
+			Debug.Log("Force Value = " + forceValue);
+			
+		}
 		
-		//Debug.Log("Potentiometer Value = " + potentiometerValue);
-		//Debug.Log("Heart Rate Value = " + hearRateValue);
-		//Debug.Log("Force Value = " + forceValue);
+		
+
         
 	}
 	
@@ -190,6 +261,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 	{
 		initWebSocket();
 		Debug.Log("Started");
+		getXmasLightsValues();
 	}
 
 	// Update is called once per frame
