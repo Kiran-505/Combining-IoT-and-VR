@@ -44,10 +44,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c099347a3a420441b6a43058102d9a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  raspberryPiIP: 192.168.0.132
+  raspberryPiIP: 10.0.0.2
   tellStickID: 21
-  cube: {fileID: 8969346238483129636, guid: 0a31a859e1480904aa3b3dc6750d70a3, type: 3}
-  potentionCube: {fileID: 0}
+  lightON: 0
+  presents:
+  - {fileID: 176482, guid: fe1bac696975c4932b5f99db90ec1396, type: 3}
+  - {fileID: 154928, guid: d93be943d646d4b34844dd299ffa8f8e, type: 3}
+  - {fileID: 184772, guid: 27ccdd0f3c4344565b9583bc54c7c768, type: 3}
+  - {fileID: 114390, guid: 70ced31189bfb4a74ba8ceabbfa5e044, type: 3}
+  - {fileID: 192312, guid: 8bad9f9533aed47bda52ed698c6f2211, type: 3}
+  potentionCube: {fileID: 8969346238483129636, guid: 0a31a859e1480904aa3b3dc6750d70a3,
+    type: 3}
   mat1: {fileID: 2100000, guid: fbfd04dfa877a254c90437ccb41115f4, type: 2}
   mat2: {fileID: 2100000, guid: 7f32c2c000fa77b46af40c09e5d6527a, type: 2}
   mat3: {fileID: 2100000, guid: 4b271286ed9d02f4787de332bc465acb, type: 2}
+  handUI: {fileID: 0}
+  minX: -0.5
+  maxX: -1.9
+  minZ: 0.6
+  maxZ: 1.9
+  minY: 2.5

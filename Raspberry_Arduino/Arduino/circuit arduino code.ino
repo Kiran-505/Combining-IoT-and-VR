@@ -89,26 +89,23 @@
 #define NOTE_CS8 4435
 #define NOTE_D8 4699
 #define NOTE_DS8 4978
-#define FORCE_SENSOR_PIN A0  // the FSR and 10K pulldown are connected to A0
+#define FORCE_SENSOR_PIN A0
 #define HEART_RATE_PIN A2
 #define POTENTIOMETER_PIN A5
 
-// constants won't change. They're used here to set pin numbers:
 const int BUTTON_PIN = 3;  // the number of the pushbutton pin
 const int LED_PIN = 10;    // the number of the LED pin
 const int BUZZER_PIN = 6;  // Arduino pin connected to Buzzer's pin
 ezBuzzer buzzer(BUZZER_PIN);
 
 
-// Variables will change:
 int lastState = HIGH;  // the previous state from the input pin
 int currentState;      // the current reading from the input pin
 
-// variables will change:
 int buttonState = 0;  // variable for reading the pushbutton status
 bool sentButtonSocket = false;
 
-int melody[] = {
+int melody[] = { //Buzzer Melody
   NOTE_E5, NOTE_E5, NOTE_E5,
   NOTE_E5, NOTE_E5, NOTE_E5,
   NOTE_E5, NOTE_G5, NOTE_C5, NOTE_D5,
@@ -153,21 +150,13 @@ void loop() {
 
   buzzer.loop();
 
-  // read the state of the switch/button:
-  currentState = digitalRead(BUTTON_PIN);
-
-  if (lastState == LOW && currentState == HIGH) {
-    // Serial.println("The state changed from LOW to HIGH");
-  }
-  // save the last state
-  lastState = currentState;
   // read the state of the pushbutton value:
   buttonState = digitalRead(BUTTON_PIN);
 
   // control LED according to the state of button
   if (buttonState == LOW) {          // If button is pressing
     digitalWrite(LED_PIN, HIGH);     // turn on LED
-    digitalWrite(BUZZER_PIN, HIGH);  // turn on
+    digitalWrite(BUZZER_PIN, HIGH);  // turn on Buzzer
 
     if (sentButtonSocket == false) {
       Serial.println("Button was pressed");

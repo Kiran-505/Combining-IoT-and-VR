@@ -4,15 +4,17 @@ import json
 import serial
 import os
 
+#Prints the websocket message Unity sends over. If the websocket has 'tdtool' in it, runs the shell command to turn on or off tellstick actuator
 def on_message(client, server, message):
     print("Client(%d) said: %s" % (client['id'], message))
     if("tdtool" in message):
-        print("This was the button")
         os.system(message)
 
+#Prints a message when a new client connects to the WebSocket server
 def new_client(client, server):
     print("New client connected with id %d" % client['id'])
 
+#Gets Arduino Serial Data such as Potentiometer and Button values
 def listen_to_arduino(server):
     arduino = serial.Serial('/dev/serial/by-id/usb-Arduino__www.arduino.cc__Arduino_Uno_649323437383519170D0-if00', 9600, timeout=.1)
     while True:
@@ -21,6 +23,7 @@ def listen_to_arduino(server):
             #print(data)
             server.send_message_to_all(data)
 
+#Starts the WebSocket server
 def create_websocket():
     server = WebsocketServer(host="0.0.0.0", port=32323)
     server.set_fn_new_client(new_client)

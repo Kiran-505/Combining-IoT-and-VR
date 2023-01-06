@@ -13,7 +13,7 @@ public class lightSwitch : MonoBehaviour
 
 
 
-    private void OnTriggerEnter(Collider other){
+	private void OnTriggerEnter(Collider other){ //Turs on or off virtual light when it detects a collision between the virtual and and the virtual switch
 
         Debug.Log("Lightswitch collided");
         turnOnLight();
@@ -22,10 +22,10 @@ public class lightSwitch : MonoBehaviour
         
     }
 
-    public void turnOnLight()
+	public void turnOnLight() //Turns on Light and Material Emission if the tellstick light is off and vice-versa and rotates the switch to simulate it being turned on/off
     {
 
-        if (communicator.lightON) // false
+        if (communicator.lightON)
         {
             pointLight.SetActive(false);
             communicator.sendTellStickSocket(tellID);
@@ -34,7 +34,7 @@ public class lightSwitch : MonoBehaviour
         }
         else
         {
-            pointLight.SetActive(true); //here 
+            pointLight.SetActive(true); 
             communicator.sendTellStickSocket(tellID);
             lampShade.GetComponent<Renderer>().material.EnableKeyword("_EMISSION");
 	        buttonObject.transform.eulerAngles = new Vector3(180, 0, 12);

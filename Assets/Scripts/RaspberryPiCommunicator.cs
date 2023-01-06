@@ -34,28 +34,24 @@ public class RaspberryPiCommunicator : MonoBehaviour
 
 	public float minX, maxX, minZ, maxZ, minY;
 
-    private Vector3 GenerateSpawnPosition() //Generates random position Vector3
+	private Vector3 GenerateSpawnPosition() //Generates random position for Presents
     {
         float spawnPosX = Random.Range(minX, maxX);
         float spawnPosZ = Random.Range(minZ, maxZ);
-
-
-
-        //float terrainHeight = MyTerrainData.GetHeight((int)spawnPosX, (int)spawnPosZ);
-
-        Vector3 randomPos = new Vector3(spawnPosX, minY, spawnPosZ);
-
+	    Vector3 randomPos = new Vector3(spawnPosX, minY, spawnPosZ);
+        
 		spawnPresent(randomPos);
-        return randomPos;
+	    return randomPos;
+        
     }
 
-    public void spawnPresent(Vector3 position)
+	public void spawnPresent(Vector3 position) //Spawns a present
     {
 		Instantiate(presents[Random.Range(0, presents.Length)], position, Quaternion.identity);
     }
 
 
-    public void sendTellStickSocket(string tellID)
+	public void sendTellStickSocket(string tellID) //Sends TellStick WebSocket to Raspberry Pi to turn On or Off actuator
 	{
         if (lightON == false)
         {
@@ -70,7 +66,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
 
     }
 
-	public void openHandUI(string socketMessage)
+	public void openHandUI(string socketMessage) //Shows or hides HandUI on Force Sensor press in Arduino and receiving the respective WebSocket
 	{
         string[] value = socketMessage.Split("=");
         forceValue = int.Parse(value[1]);
@@ -95,7 +91,7 @@ public class RaspberryPiCommunicator : MonoBehaviour
     }
 
 
-    private void initWebSocket()
+	private void initWebSocket() //Starts WebSocket Client Connection
 	{
 		webSocket = new WebSocket($"ws://{raspberryPiIP}:{webSocketPort}");
 		webSocket.Connect();
@@ -107,22 +103,22 @@ public class RaspberryPiCommunicator : MonoBehaviour
 
 	}
 
-	private void WebSocket_OnOpen()
+	private void WebSocket_OnOpen() //Alerts on console when WebSocket Connection is Successfull
 	{
 		Debug.Log("Connecion opened!");
 	}
 
-	private void WebSocket_OnError(string error)
+	private void WebSocket_OnError(string error) //Alerts on console when WebSocket Connection is Unsuccessfull
 	{
 		Debug.Log($"Error: {error}");
 	}
 
-	private void WebSocket_OnClose(WebSocketCloseCode closeCode)
+	private void WebSocket_OnClose(WebSocketCloseCode closeCode) //Alerts on console when WebSocket Connection is Closed
 	{
 		Debug.Log("Connection closed!");
 	}
 
-	private void WebSocket_OnMessage(byte[] data)
+	private void WebSocket_OnMessage(byte[] data) //Receives webSocket message and handles it respectively depending on what it contains
 	{
 		string socketMessage = System.Text.Encoding.UTF8.GetString(data);
 		//Debug.Log(System.Text.Encoding.UTF8.GetString(data));
@@ -176,6 +172,18 @@ public class RaspberryPiCommunicator : MonoBehaviour
 		//Debug.Log("Force Value = " + forceValue);
         
 	}
+	
+	
+		
+	async void SendWebSocketMessage(string text) //Sends Websocket Message to Raspberry Pi
+	{
+		if (webSocket.State == WebSocketState.Open)
+		{
+			// Sending plain text socket
+			await webSocket.SendText(text);
+		}
+	}
+	
 
 	// Start is called before the first frame update
 	void Start()
@@ -191,18 +199,8 @@ public class RaspberryPiCommunicator : MonoBehaviour
 
     }
 	
-	
-	async void SendWebSocketMessage(string text)
-	{
-		if (webSocket.State == WebSocketState.Open)
-		{
-			// Sending plain text socket
-			await webSocket.SendText(text);
-		}
-	}
-	
 
-	private async void OnApplicationQuit()
+	private async void OnApplicationQuit() //Closes Websocket Connection Correctly when app is closed
 	{
 		await webSocket.Close();
 	}
